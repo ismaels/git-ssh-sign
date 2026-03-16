@@ -27,3 +27,8 @@ func Execute() {
 		os.Exit(1)
 	}
 }
+
+// SetVersion sets the version string reported by --version.
+func SetVersion(v string) {
+	rootCmd.Version = v
+}
