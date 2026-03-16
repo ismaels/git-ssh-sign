@@ -38,13 +38,14 @@ func setupGitConfig(t *testing.T) string {
 		t.Fatal(err)
 	}
 	t.Setenv("GIT_CONFIG_GLOBAL", cfgFile)
+	t.Setenv("GIT_CONFIG_NOSYSTEM", "1")
 	return cfgFile
 }
 
 func TestGitVersion(t *testing.T) {
 	v, ok := gitconfig.GitVersion()
 	if !ok {
-		t.Fatal("GitVersion returned false — is git installed?")
+		t.Skip("git not found, skipping")
 	}
 	if v == "" {
 		t.Fatal("GitVersion returned empty string")
@@ -82,6 +83,18 @@ func TestRead(t *testing.T) {
 	if cfg.SigningKey != "" {
 		t.Fatalf("expected empty SigningKey, got %q", cfg.SigningKey)
 	}
+	if cfg.CommitGPGSign != "" {
+		t.Fatalf("expected empty CommitGPGSign, got %q", cfg.CommitGPGSign)
+	}
+	if cfg.TagGPGSign != "" {
+		t.Fatalf("expected empty TagGPGSign, got %q", cfg.TagGPGSign)
+	}
+	if cfg.AllowedSignersFile != "" {
+		t.Fatalf("expected empty AllowedSignersFile, got %q", cfg.AllowedSignersFile)
+	}
+	if cfg.SSHProgram != "" {
+		t.Fatalf("expected empty SSHProgram, got %q", cfg.SSHProgram)
+	}
 }
 
 func TestApply(t *testing.T) {
@@ -108,7 +121,7 @@ func TestSigningConfigFieldMapping(t *testing.T) {
 		"user.signingkey":            "ssh-ed25519 AAAA test",
 		"commit.gpgsign":             "true",
 		"tag.gpgsign":                "true",
-		"gpg.ssh.allowedSignersFile": "/tmp/allowed_signers",
+		"gpg.ssh.allowedSignersFile": "/nonexistent/allowed_signers",
 		"gpg.ssh.program":            "/usr/bin/op-ssh-sign",
 	}
 	if err := gitconfig.Apply(pairs); err != nil {
@@ -127,7 +140,7 @@ func TestSigningConfigFieldMapping(t *testing.T) {
 	if cfg.TagGPGSign != "true" {
 		t.Errorf("TagGPGSign: got %q", cfg.TagGPGSign)
 	}
-	if cfg.AllowedSignersFile != "/tmp/allowed_signers" {
+	if cfg.AllowedSignersFile != "/nonexistent/allowed_signers" {
 		t.Errorf("AllowedSignersFile: got %q", cfg.AllowedSignersFile)
 	}
 	if cfg.SSHProgram != "/usr/bin/op-ssh-sign" {
