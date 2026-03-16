@@ -62,6 +62,23 @@ Add your public key to GitHub as a **Signing Key**:
 
 Commits will show as **Verified** on GitHub.
 
+## How to Contribute
+
+```bash
+git clone https://github.com/ismaels/git-ssh-sign.git
+cd git-ssh-sign
+go build ./...
+go run . setup  # or: go run . verify
+```
+
+Run tests:
+
+```bash
+go test -race ./...
+```
+
+Submit a PR against `main`. CI must pass before merging.
+
 ## License
 
 MIT
