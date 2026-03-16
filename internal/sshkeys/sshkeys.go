@@ -6,9 +6,19 @@ import (
 	"strings"
 )
 
+// homeDir returns the current user's home directory.
+// It checks $HOME first so tests can isolate via t.Setenv("HOME", ...).
+func homeDir() string {
+	if h := os.Getenv("HOME"); h != "" {
+		return h
+	}
+	h, _ := os.UserHomeDir()
+	return h
+}
+
 // CommonKeyPaths returns the default SSH public key paths to probe.
 func CommonKeyPaths() []string {
-	home, _ := os.UserHomeDir()
+	home := homeDir()
 	return []string{
 		filepath.Join(home, ".ssh", "id_ed25519.pub"),
 		filepath.Join(home, ".ssh", "id_rsa.pub"),
@@ -38,7 +48,7 @@ func ReadPublicKey(path string) (string, error) {
 
 // OnePasswordAgentSocketPath returns the 1Password SSH agent socket path for macOS.
 func OnePasswordAgentSocketPath() string {
-	home, _ := os.UserHomeDir()
+	home := homeDir()
 	return filepath.Join(home, "Library", "Group Containers",
 		"2BUA8C4S2C.com.1password", "t", "agent.sock")
 }
@@ -62,7 +72,7 @@ func Has1PasswordSignBinary() bool {
 
 // AllowedSignersPath returns the default allowed signers file path.
 func AllowedSignersPath() string {
-	home, _ := os.UserHomeDir()
+	home := homeDir()
 	return filepath.Join(home, ".ssh", "allowed_signers")
 }
 

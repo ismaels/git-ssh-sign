@@ -13,6 +13,9 @@ import (
 // --- Unit tests for pure functions ---
 
 func TestOnePasswordSignProgram(t *testing.T) {
+	if runtime.GOOS != "darwin" {
+		t.Skip("OnePasswordSignProgram returns a macOS path, skipping on non-darwin")
+	}
 	got := sshkeys.OnePasswordSignProgram()
 	want := "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 	if got != want {
