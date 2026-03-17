@@ -7,7 +7,8 @@ SSH signing is simpler than GPG: it uses the same SSH keys you already have, no 
 ## Install
 
 ```bash
-brew install ismaels/tap/git-ssh-sign
+brew tap ismaels/gss-tap
+brew install git-ssh-sign
 ```
 
 Or build from source:
