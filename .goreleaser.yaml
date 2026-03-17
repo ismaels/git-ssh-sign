@@ -30,7 +30,7 @@ brews:
   - name: git-ssh-sign
     repository:
       owner: ismaels
-      name: homebrew-tap
+      name: homebrew-gss-tap
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     homepage: "https://github.com/ismaels/git-ssh-sign"
     description: "Interactive wizard to configure SSH commit signing for Git"
